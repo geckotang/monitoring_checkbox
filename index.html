@@ -48,23 +48,31 @@
 			};
 
 			//全部のチェックを入れる
-			function checkAllCheckbox($checkboxes, $toggler) {
-			  var allCheckBox = [$checkboxes, $toggler];
+			function checkAllCheckbox($group) {
+			  var allCheckBox = $group.find(selector.checkbox);
 				$.each(allCheckBox, function(idx, item){
 					var $checkbox = $(item);
 					$checkbox.prop('checked', true);
-					$checkbox.closest(selector.checkboxLabel).addClass(className.isChecked);
+					checkLabel($checkbox);
 				});
 			};
 
 			//全部のチェックを外す
-			function uncheckAllCheckbox($checkboxes, $toggler) {
-			  var allCheckBox = [$checkboxes, $toggler];
+			function uncheckAllCheckbox($group) {
+			  var allCheckBox = $group.find(selector.checkbox);
 				$.each(allCheckBox, function(idx, item){
 					var $checkbox = $(item);
 					$checkbox.prop('checked', false);
-					$checkbox.closest(selector.checkboxLabel).removeClass(className.isChecked);
+					uncheckLabel($checkbox);
 				});
+			};
+
+			function checkLabel($checkbox) {
+				$checkbox.closest(selector.checkboxLabel).addClass(className.isChecked);
+			};
+
+			function uncheckLabel($checkbox) {
+				$checkbox.closest(selector.checkboxLabel).removeClass(className.isChecked);
 			};
 
 			//全てチェックされているかどうか調べる
@@ -87,16 +95,30 @@
 				var $toggler = $group.find(selector.toggler);
 				var $checkboxes = $group.find(selector.checkbox).not(selector.toggler);
 				//チェックボックスをクリック
-				$checkboxes.on('click', function(){
-					$toggler.prop('checked', isAllChecked($checkboxes));
+				$checkboxes.on('click', function(e){
+					var $checkbox = $(this);
+					//チェックされていればスタイルを当てる
+					if ($checkbox.prop('checked')) {
+						checkLabel($checkbox);
+					} else {
+						uncheckLabel($checkbox);
+					}
+					//全てチェックされているか調べる
+					if (isAllChecked($checkboxes)) {
+						$toggler.prop('checked', true);
+						checkLabel($toggler);
+					} else {
+						$toggler.prop('checked', false);
+						uncheckLabel($toggler);
+					}
 				});
 				//全チェックをクリック
 				$toggler.on('click', function(){
 					var _isChecked = $(this).prop('checked');
 					if (_isChecked) {
-						checkAllCheckbox($checkboxes, $toggler);
+						checkAllCheckbox($group);
 					} else {
-						uncheckAllCheckbox($checkboxes, $toggler);
+						uncheckAllCheckbox($group);
 					}
 				});
 			});
