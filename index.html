@@ -19,11 +19,11 @@
 			border-radius: 5px;
 		}
 		.select-group label:hover,
-		.select-group label.is-select {
+		.select-group label.is-selected {
 			border: 1px solid #ccc;
 			background-color: #fff;
 		}
-		.select-group label:first-child {
+		.select-group label.checkbox-toggler {
 			color: #008aff;
 		}
 		.select-group input[type="checkbox"] {
@@ -35,44 +35,96 @@
 	<script>
 		$(function(){
 
-			$('.group-list label input').click(function(){
-				$(this).parent().toggleClass('is-select');
-			});
+			//セレクタ名
+			var selector = {
+			  group: '.select-group',
+				toggler: '.checkbox-toggler input',
+				checkbox: 'label input'
+			};
+			//クラス名
+			var className = {
+			  isChecked: 'is-selected'
+			};
 
-			$('.group-list label:first-child input').click(function(){
-				var items = $(this).parent().nextAll().find('input');
-				if($(this).is(':checked')) {
-					$(items).prop('checked', true);
-				} else {
-					$(items).prop('checked', false);
-				}
-				$('.group-list label').toggleClass('is-select');
-				$(this).parent().toggleClass('is-select');
+			//全部のチェックを入れる
+			function checkAllCheckbox($checkboxes, $toggler) {
+			  var allCheckBox = [$checkboxes, $toggler];
+				$.each(allCheckBox, function(idx, item){
+					var $checkbox = $(item);
+					$checkbox.prop('checked', true);
+					$checkbox.closest('label').addClass(className.isChecked);
+				});
+			};
+
+			//全部のチェックを外す
+			function uncheckAllCheckbox($checkboxes, $toggler) {
+			  var allCheckBox = [$checkboxes, $toggler];
+				$.each(allCheckBox, function(idx, item){
+					var $checkbox = $(item);
+					$checkbox.prop('checked', false);
+					$checkbox.closest('label').removeClass(className.isChecked);
+				});
+			};
+
+			//全てチェックされているかどうか調べる
+			function isAllChecked($checkboxes, $toggler) {
+				var _isAllCheck = true;
+				$.each($checkboxes, function(idx, item){
+					var $checkbox = $(item);
+					if (!$checkbox.prop('checked')) {
+						_isAllCheck = false;
+						//どれかしらがfalseだったら処理を抜ける
+						return false;
+					}
+				});
+				return _isAllCheck;
+			};
+
+			//fieldset毎に適用する
+			$(selector.group).each(function(){
+				var $group = $(this);
+				var $toggler = $group.find(selector.toggler);
+				var $checkboxes = $group.find(selector.checkbox).not(selector.toggler);
+				//チェックボックスをクリック
+				$checkboxes.on('click', function(){
+					$toggler.prop('checked', isAllChecked($checkboxes));
+				});
+				//全チェックをクリック
+				$toggler.on('click', function(){
+					var _isChecked = $(this).prop('checked');
+					if (_isChecked) {
+						checkAllCheckbox($checkboxes, $toggler);
+					} else {
+						uncheckAllCheckbox($checkboxes, $toggler);
+					}
+				});
 			});
 
 		});
 	</script>
 </head>
 <body>
-	<form class="form">
+	<form class="form" action="">
 		<fieldset class="select-group">
-			<legend><a href="javascript:;" class="slideTrg">グループ名A</a></legend>
+			<legend><a href="javascript:void(0);" class="slideTrg">グループ名A</a></legend>
 			<div class="group-list">
-				<label for="userA00"><input type="checkbox" name="selectnameA" value="すべて選択" id="userA00">すべて選択</label>
+				<label class="checkbox-toggler" for="userA00"><input type="checkbox" name="selectnameA" value="すべて選択" id="userA00">すべて選択</label>
 				<label for="userA01"><input type="checkbox" name="selectnameA" value="げこたん" id="userA01">げこたん</label>
 				<label for="userA02"><input type="checkbox" name="selectnameA" value="じゅんさん" id="userA02">じゅんさん</label>
 				<label for="userA03"><input type="checkbox" name="selectnameA" value="てんちゃん" id="userA03">てんちゃん</label>
 				<label for="userA04"><input type="checkbox" name="selectnameA" value="まとりん" id="userA04">まとりん</label>
+				<label class="checkbox-toggler" for="userA05"><input type="checkbox" name="selectnameA" value="すべて選択" id="userA05">すべて選択</label>
 			<!-- /.select-group --></div>
 		</fieldset>
 		<fieldset class="select-group">
-			<legend><a href="javascript:;" class="slideTrg">グループ名B</a></legend>
+			<legend><a href="javascript:void(0);" class="slideTrg">グループ名B</a></legend>
 			<div class="group-list">
-				<label for="userB00"><input type="checkbox" name="selectnameB" value="すべて選択" id="userB00">すべて選択</label>
+				<label class="checkbox-toggler" for="userB00"><input type="checkbox" name="selectnameB" value="すべて選択" id="userB00">すべて選択</label>
 				<label for="userB01"><input type="checkbox" name="selectnameB" value="げこたん" id="userB01">げこたん</label>
 				<label for="userB02"><input type="checkbox" name="selectnameB" value="じゅんさん" id="userB02">じゅんさん</label>
 				<label for="userB03"><input type="checkbox" name="selectnameB" value="てんちゃん" id="userB03">てんちゃん</label>
 				<label for="userB04"><input type="checkbox" name="selectnameB" value="まとりん" id="userB04">まとりん</label>
+				<label class="checkbox-toggler" for="userB05"><input type="checkbox" name="selectnameB" value="すべて選択" id="userB05">すべて選択</label>
 			<!-- /.select-group --></div>
 		</fieldset>
 </form>
