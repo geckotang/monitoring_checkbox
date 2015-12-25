@@ -34,22 +34,22 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script>
 		$(function(){
+
 			$('.group-list label input').click(function(){
 				$(this).parent().toggleClass('is-select');
 			});
-		});
 
-		$(function(){
 			$('.group-list label:first-child input').click(function(){
 				var items = $(this).parent().nextAll().find('input');
 				if($(this).is(':checked')) {
-					 $(items).prop('checked', true);
+					$(items).prop('checked', true);
 				} else {
 					$(items).prop('checked', false);
 				}
 				$('.group-list label').toggleClass('is-select');
 				$(this).parent().toggleClass('is-select');
 			});
+
 		});
 	</script>
 </head>
