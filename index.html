@@ -39,7 +39,8 @@
 			var selector = {
 			  group: '.select-group',
 				toggler: '.checkbox-toggler input',
-				checkbox: 'label input'
+				checkbox: 'label input',
+				checkboxLabel: 'label'
 			};
 			//クラス名
 			var className = {
@@ -52,7 +53,7 @@
 				$.each(allCheckBox, function(idx, item){
 					var $checkbox = $(item);
 					$checkbox.prop('checked', true);
-					$checkbox.closest('label').addClass(className.isChecked);
+					$checkbox.closest(selector.checkboxLabel).addClass(className.isChecked);
 				});
 			};
 
@@ -62,7 +63,7 @@
 				$.each(allCheckBox, function(idx, item){
 					var $checkbox = $(item);
 					$checkbox.prop('checked', false);
-					$checkbox.closest('label').removeClass(className.isChecked);
+					$checkbox.closest(selector.checkboxLabel).removeClass(className.isChecked);
 				});
 			};
 
